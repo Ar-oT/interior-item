@@ -3,14 +3,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { products } from "@/data/products";
 import { createClient } from "@/lib/supabase/server";
+import { displayName } from "@/lib/user-display";
 
 const [featured, ...rest] = products;
-
-function displayName(claims: { user_metadata?: Record<string, unknown> } | undefined) {
-  const metadata = claims?.user_metadata ?? {};
-  const name = metadata.name ?? metadata.full_name ?? metadata.nickname;
-  return typeof name === "string" && name.trim() ? name : undefined;
-}
 
 export default async function Home() {
   const supabase = await createClient();

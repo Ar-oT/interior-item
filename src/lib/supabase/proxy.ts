@@ -46,7 +46,9 @@ export async function updateSession(request: NextRequest) {
   const isAuthenticated = Boolean(data?.claims);
   const path = request.nextUrl.pathname;
   const isPublicPath =
-    path.startsWith("/login") || path.startsWith("/auth");
+    path.startsWith("/login") ||
+    path.startsWith("/auth") ||
+    path.startsWith("/share");
 
   if (!isAuthenticated && !isPublicPath) {
     const url = request.nextUrl.clone();

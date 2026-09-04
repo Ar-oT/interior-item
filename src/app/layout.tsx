@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import { CartProvider } from "@/components/cart-provider";
+import { getCartLines } from "@/lib/cart";
 import "./globals.css";
 
 const sans = Noto_Sans_KR({
@@ -30,7 +31,9 @@ export const viewport: Viewport = {
   themeColor: "#f3eadc",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const cartItems = await getCartLines();
+
   return (
     <html
       lang="ko"
@@ -38,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-paper font-sans text-ink antialiased">
-        <CartProvider>{children}</CartProvider>
+        <CartProvider initialItems={cartItems}>{children}</CartProvider>
       </body>
     </html>
   );

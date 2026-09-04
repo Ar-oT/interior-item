@@ -3,47 +3,76 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
+  useTransition,
   type ReactNode,
 } from "react";
-
-type CartItem = {
-  id: string;
-  name: string;
-  quantity: number;
-};
+import { addCartItem } from "@/app/cart/actions";
+import type { CartLine } from "@/lib/cart-model";
+import { products } from "@/data/products";
 
 type CartContextValue = {
-  items: CartItem[];
+  items: CartLine[];
   count: number;
-  add: (id: string, name: string) => void;
+  pending: boolean;
+  add: (productId: string) => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+export function CartProvider({
+  children,
+  initialItems,
+}: {
+  children: ReactNode;
+  initialItems: CartLine[];
+}) {
+  const [items, setItems] = useState(initialItems);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
 
   const value = useMemo(() => {
-    const add = (id: string, name: string) => {
+    const add = (productId: string) => {
+      const product = products.find((item) => item.id === productId);
+      if (!product) return;
+
       setItems((current) => {
-        const existing = current.find((item) => item.id === id);
+        const existing = current.find((item) => item.productId === productId);
         if (existing) {
           return current.map((item) =>
-            item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+            item.productId === productId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
           );
         }
-        return [...current, { id, name, quantity: 1 }];
+        return [
+          ...current,
+          {
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+          },
+        ];
+      });
+
+      startTransition(async () => {
+        await addCartItem(productId);
       });
     };
 
     return {
       items,
       count: items.reduce((sum, item) => sum + item.quantity, 0),
+      pending: isPending,
       add,
     };
-  }, [items]);
+  }, [items, isPending]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
