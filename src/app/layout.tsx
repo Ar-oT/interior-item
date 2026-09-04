@@ -34,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ko"
+      data-scroll-behavior="smooth"
       className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-paper font-sans text-ink antialiased">

@@ -1,3 +1,4 @@
+import { signOut } from "@/app/login/actions";
 import { CartButton } from "@/components/cart-button";
 
 const navItems = [
@@ -6,7 +7,7 @@ const navItems = [
   { href: "#visit", label: "방문" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ userName }: { userName?: string }) {
   return (
     <header className="sticky top-0 z-20 border-b border-line/80 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
@@ -24,7 +25,22 @@ export function SiteHeader() {
             </a>
           ))}
         </nav>
-        <CartButton />
+        <div className="flex items-center gap-2 sm:gap-3">
+          {userName ? (
+            <span className="hidden max-w-28 truncate text-xs text-ink/60 sm:inline">
+              {userName}
+            </span>
+          ) : null}
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="rounded-full border border-ink/15 px-3 py-1.5 text-sm tracking-wide hover:border-ink/40"
+            >
+              로그아웃
+            </button>
+          </form>
+          <CartButton />
+        </div>
       </div>
     </header>
   );

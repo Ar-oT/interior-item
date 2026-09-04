@@ -2,10 +2,23 @@ import { ProductCard } from "@/components/product-card";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { products } from "@/data/products";
+import { createClient } from "@/lib/supabase/server";
 
 const [featured, ...rest] = products;
 
-export default function Home() {
+function displayName(claims: { user_metadata?: Record<string, unknown> } | undefined) {
+  const metadata = claims?.user_metadata ?? {};
+  const name = metadata.name ?? metadata.full_name ?? metadata.nickname;
+  return typeof name === "string" && name.trim() ? name : undefined;
+}
+
+export default async function Home() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const userName = displayName(
+    data?.claims as { user_metadata?: Record<string, unknown> } | undefined,
+  );
+
   return (
     <>
       <a
@@ -14,7 +27,7 @@ export default function Home() {
       >
         상품 목록으로 건너뛰기
       </a>
-      <SiteHeader />
+      <SiteHeader userName={userName} />
       <main id="top" className="flex-1">
         <section className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:py-24">
           <div>
