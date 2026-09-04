@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CartShareActions } from "@/components/cart-share-actions";
+import { CheckoutButton } from "@/components/checkout-button";
 import { useCart } from "@/components/cart-provider";
 import { cartTotal } from "@/lib/cart-model";
 import { formatPrice } from "@/data/products";
@@ -46,6 +47,9 @@ export function CartPageContent({ kakaoJsKey }: { kakaoJsKey: string }) {
       <p className="mt-5 text-right font-serif text-xl tabular-nums">
         합계 {formatPrice(cartTotal(items))}
       </p>
+      <div className="mt-8">
+        <CheckoutButton />
+      </div>
       <CartShareActions items={items} kakaoJsKey={kakaoJsKey} />
     </div>
   );

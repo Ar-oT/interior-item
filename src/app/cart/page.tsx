@@ -24,8 +24,8 @@ export default async function CartPage() {
         <p className="text-xs tracking-[0.28em] text-clay">CART</p>
         <h1 className="mt-3 font-serif text-4xl tracking-tight">장바구니</h1>
         <p className="mt-4 max-w-md text-sm leading-7 text-ink/70">
-          계정에 저장된 소품입니다. 카카오톡으로는 페이지와 품목을, 링크로는
-          페이지만 공유할 수 있습니다.
+          계정에 저장된 소품입니다. 주문하기로 결제하거나, 카카오톡과 링크로
+          목록을 공유할 수 있습니다.
         </p>
         <CartPageContent
           kakaoJsKey={process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY ?? ""}

@@ -48,7 +48,8 @@ export async function updateSession(request: NextRequest) {
   const isPublicPath =
     path.startsWith("/login") ||
     path.startsWith("/auth") ||
-    path.startsWith("/share");
+    path.startsWith("/share") ||
+    path.startsWith("/api/payments/webhook");
 
   if (!isAuthenticated && !isPublicPath) {
     const url = request.nextUrl.clone();

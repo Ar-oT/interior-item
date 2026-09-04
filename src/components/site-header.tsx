@@ -40,6 +40,12 @@ export function SiteHeader({ userName }: { userName?: string }) {
               로그아웃
             </button>
           </form>
+          <Link
+            href="/orders"
+            className="hidden text-sm text-ink/70 hover:text-ink sm:inline"
+          >
+            주문
+          </Link>
           <CartButton />
         </div>
       </div>
