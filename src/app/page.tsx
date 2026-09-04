@@ -1,69 +1,115 @@
-import Image from "next/image";
+import { ProductCard } from "@/components/product-card";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { products } from "@/data/products";
+
+const [featured, ...rest] = products;
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <a
+        href="#collection"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-3 focus:py-2 focus:text-paper"
+      >
+        상품 목록으로 건너뛰기
+      </a>
+      <SiteHeader />
+      <main id="top" className="flex-1">
+        <section className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:py-24">
+          <div>
+            <p className="text-xs tracking-[0.28em] text-clay">ONGYEOL · 05 PIECES</p>
+            <h1 className="mt-4 max-w-xl font-serif text-4xl leading-tight tracking-tight sm:text-6xl">
+              매일의 방에
+              <br />
+              온기와 결을 더합니다
+            </h1>
+            <p className="mt-6 max-w-md text-base leading-8 text-ink/70">
+              온결은 다섯 가지 소품만 만듭니다. 많이 모으기보다, 오래 곁에 둘 물건을
+              고르는 작은 상점입니다.
+            </p>
+          </div>
+          <dl className="grid grid-cols-3 gap-4 border-t border-line pt-6 text-sm">
+            <div>
+              <dt className="text-ink/50">컬렉션</dt>
+              <dd className="mt-1 font-serif text-2xl">5</dd>
+            </div>
+            <div>
+              <dt className="text-ink/50">제작</dt>
+              <dd className="mt-1 font-serif text-2xl">소량</dd>
+            </div>
+            <div>
+              <dt className="text-ink/50">배송</dt>
+              <dd className="mt-1 font-serif text-2xl">서울</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section
+          id="collection"
+          className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-24 sm:px-8"
+        >
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs tracking-[0.28em] text-moss">COLLECTION</p>
+              <h2 className="mt-2 font-serif text-3xl tracking-tight">이번 계절의 다섯 점</h2>
+            </div>
+            <p className="hidden max-w-xs text-right text-sm leading-6 text-ink/55 sm:block">
+              화병, 램프, 캔들, 쿠션, 트레이. 방에 하나씩만 두어도 공기가 달라집니다.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <ProductCard product={featured} featured />
+            {rest.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="story"
+          className="border-y border-line bg-white/35"
+        >
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:py-20">
+            <h2 className="font-serif text-3xl leading-snug tracking-tight">
+              물건의 결이
+              <br />
+              공간의 온도가 됩니다
+            </h2>
+            <div className="space-y-5 text-sm leading-7 text-ink/75">
+              <p>
+                반짝이는 신상보다, 손때가 묻는 물건을 좋아합니다. 온결의 소품은 모두
+                만졌을 때의 감촉과 빛이 머무는 방식을 기준으로 골랐습니다.
+              </p>
+              <p>
+                한 시즌에 다섯 점만 소개합니다. 재고가 끝나면 같은 결의 다음 작업을
+                기다립니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="visit" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-16 sm:px-8">
+          <p className="text-xs tracking-[0.28em] text-clay">VISIT</p>
+          <h2 className="mt-2 font-serif text-3xl tracking-tight">방문과 문의</h2>
+          <div className="mt-8 grid gap-8 sm:grid-cols-2">
+            <address className="not-italic text-sm leading-7 text-ink/75">
+              <p>서울시 성동구 서울숲길 12</p>
+              <p>수–일 12:00–19:00</p>
+              <p>월요일 · 화요일 휴무</p>
+            </address>
+            <p className="text-sm leading-7 text-ink/75">
+              주문과 재고 문의는{" "}
+              <a className="underline decoration-line underline-offset-4 hover:text-clay" href="mailto:hello@ongyeol.kr">
+                hello@ongyeol.kr
+              </a>
+              로 보내 주세요. 장바구니에 담아 두신 소품을 함께 적어 주시면 더
+              빠르게 안내합니다.
+            </p>
+          </div>
+        </section>
       </main>
-    </div>
+      <SiteFooter />
+    </>
   );
 }
