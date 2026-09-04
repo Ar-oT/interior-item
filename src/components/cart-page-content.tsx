@@ -6,7 +6,7 @@ import { useCart } from "@/components/cart-provider";
 import { cartTotal } from "@/lib/cart-model";
 import { formatPrice } from "@/data/products";
 
-export function CartPageContent() {
+export function CartPageContent({ kakaoJsKey }: { kakaoJsKey: string }) {
   const { items } = useCart();
 
   if (items.length === 0) {
@@ -46,7 +46,7 @@ export function CartPageContent() {
       <p className="mt-5 text-right font-serif text-xl tabular-nums">
         합계 {formatPrice(cartTotal(items))}
       </p>
-      <CartShareActions items={items} />
+      <CartShareActions items={items} kakaoJsKey={kakaoJsKey} />
     </div>
   );
 }

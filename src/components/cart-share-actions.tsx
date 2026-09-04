@@ -20,14 +20,23 @@ declare global {
   }
 }
 
-const kakaoJsKey = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
-
-function ensureKakao() {
-  if (!kakaoJsKey || !window.Kakao) return false;
+function initKakao(key: string) {
+  if (!window.Kakao) return false;
   if (!window.Kakao.isInitialized()) {
-    window.Kakao.init(kakaoJsKey);
+    window.Kakao.init(key);
   }
   return window.Kakao.isInitialized();
+}
+
+async function waitForKakao(key: string, timeoutMs = 8000) {
+  if (initKakao(key)) return true;
+
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    await new Promise((resolve) => window.setTimeout(resolve, 50));
+    if (initKakao(key)) return true;
+  }
+  return false;
 }
 
 function shareUrl(shareId: string) {
@@ -96,7 +105,13 @@ function sendKakaoCart(url: string, items: CartLine[]) {
   return true;
 }
 
-export function CartShareActions({ items }: { items: CartLine[] }) {
+export function CartShareActions({
+  items,
+  kakaoJsKey,
+}: {
+  items: CartLine[];
+  kakaoJsKey: string;
+}) {
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState<"kakao" | "link" | null>(null);
 
@@ -110,13 +125,20 @@ export function CartShareActions({ items }: { items: CartLine[] }) {
     setBusy("kakao");
     try {
       const url = await createShareUrl();
-      if (ensureKakao() && sendKakaoCart(url, items)) {
-        setStatus("카카오톡으로 페이지와 담긴 품목을 공유합니다.");
+      if (!kakaoJsKey) {
+        setStatus(
+          "카카오 JavaScript 키가 없어 카카오톡 창을 열 수 없습니다. 아래 링크 공유를 사용해 주세요.",
+        );
         return;
       }
-      setStatus(
-        "카카오 JavaScript 키가 없어 카카오톡 창을 열 수 없습니다. 아래 링크 공유를 사용해 주세요.",
-      );
+      if (!(await waitForKakao(kakaoJsKey))) {
+        setStatus(
+          "카카오톡 공유 준비에 실패했습니다. 잠시 후 다시 시도하거나 링크 공유를 사용해 주세요.",
+        );
+        return;
+      }
+      sendKakaoCart(url, items);
+      setStatus("카카오톡으로 페이지와 담긴 품목을 공유합니다.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "공유에 실패했습니다.");
     } finally {
@@ -147,7 +169,7 @@ export function CartShareActions({ items }: { items: CartLine[] }) {
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
           integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVwlDKJriQ4iwxEaa6C5erkVO2+H+PCk="
           crossOrigin="anonymous"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       ) : null}
       <div className="grid gap-2 sm:grid-cols-2">

@@ -27,7 +27,9 @@ export default async function CartPage() {
           계정에 저장된 소품입니다. 카카오톡으로는 페이지와 품목을, 링크로는
           페이지만 공유할 수 있습니다.
         </p>
-        <CartPageContent />
+        <CartPageContent
+          kakaoJsKey={process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY ?? ""}
+        />
       </main>
       <SiteFooter />
     </>
