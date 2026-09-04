@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { useState } from "react";
 import { createCartShare } from "@/app/cart/actions";
 import { cartTotal, type CartLine } from "@/lib/cart-model";
@@ -22,10 +21,14 @@ declare global {
 
 function initKakao(key: string) {
   if (!window.Kakao) return false;
-  if (!window.Kakao.isInitialized()) {
-    window.Kakao.init(key);
+  try {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(key);
+    }
+    return window.Kakao.isInitialized();
+  } catch {
+    return false;
   }
-  return window.Kakao.isInitialized();
 }
 
 async function waitForKakao(key: string, timeoutMs = 8000) {
@@ -164,14 +167,6 @@ export function CartShareActions({
 
   return (
     <div className="mt-8 space-y-3">
-      {kakaoJsKey ? (
-        <Script
-          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
-          integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVwlDKJriQ4iwxEaa6C5erkVO2+H+PCk="
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-      ) : null}
       <div className="grid gap-2 sm:grid-cols-2">
         <button
           type="button"

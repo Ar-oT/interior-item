@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import Script from "next/script";
 import { CartProvider } from "@/components/cart-provider";
 import { getCartLines } from "@/lib/cart";
 import "./globals.css";
+
+const kakaoJsKey = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
 
 const sans = Noto_Sans_KR({
   subsets: ["latin"],
@@ -41,6 +44,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-paper font-sans text-ink antialiased">
+        {kakaoJsKey ? (
+          <Script
+            src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.3/kakao.min.js"
+            integrity="sha384-oroumrnFVE0xtgqyDZJARgERibXg2C28380uaUZz2kHDS5CR7tu20eGiOU6GkTpy"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        ) : null}
         <CartProvider initialItems={cartItems}>{children}</CartProvider>
       </body>
     </html>
